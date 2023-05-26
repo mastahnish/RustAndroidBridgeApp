@@ -1,0 +1,30 @@
+export BUILD_TOOLS_VERSION := '33.0.0'
+export NDK_VERSION := '25.1.8937393'
+export ANDROID_SDK_PATH := '/opt/homebrew/share/android-commandlinetools'
+
+build: environment
+    set -e
+
+    just -f ../../rust/justfile build-android
+
+    echo "🐘 Assembling gradle project..."
+    ./gradlew build
+
+clean:
+   #!/usr/bin/env sh
+    set -e
+    echo "🐘 Cleaning gradle project..."
+    ./gradlew clean
+
+environment:
+    #!/usr/bin/env sh
+    set -e
+    brew install --cask temurin
+    brew install --cask android-commandlinetools --verbose --debug
+    sdkmanager --install "build-tools;{{BUILD_TOOLS_VERSION}}" "ndk;{{NDK_VERSION}}" "emulator"
+    sdkmanager "system-images;android-33;google_apis;arm64-v8a"
+    sdkmanager "platform-tools" "platforms;android-33"
+    sdkmanager --licenses
+    sdkmanager --list_installed
+
+
