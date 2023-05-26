@@ -1,4 +1,4 @@
-extern crate image;
+/*extern crate image;
 extern crate jni;
 
 use jni::JNIEnv;
@@ -31,3 +31,4 @@ pub extern "system" fn Java_pl_myosolutions_rustandroidbridgeapp_MainActivity_gr
 
     output_image
 }
+*/
