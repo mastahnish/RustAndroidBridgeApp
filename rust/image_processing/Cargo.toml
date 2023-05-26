@@ -1,13 +1,13 @@
 [package]
 name = "image_processing"
 version = "0.1.0"
-edition = "2021"
+edition = "2023"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [lib]
 crate-type = ["cdylib"]
 
 [dependencies]
-android_logger = "0.9"
 jni = "0.19"
+jni-sys = "0.3.0"
 image = "0.23"
