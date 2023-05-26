@@ -1,0 +1,53 @@
+alias b := build
+
+build profile="":
+  #!/usr/bin/env sh
+  set -e
+
+  echo "🌳 setting up environment..."
+  ANDROID_BUILD_PROFILE=$(echo {{ if profile == "" { "debug" } else { "release" } }})
+  if [ "${ANDROID_BUILD_PROFILE}" == "release" ]; then RUST_PROFILE="--release"; fi
+
+  targets=(
+    "aarch64-linux-android"
+    "armv7-linux-androideabi"
+    "i686-linux-android"
+    "x86_64-linux-android"
+  )
+
+  for rust_target in ${targets[@]}; do
+   echo "🚀 starting \033[1m${ANDROID_BUILD_PROFILE}\033[0m build for \033[0;36m$rust_target\033[0m..."
+   echo "⚙️  adding rustup target..."
+   rustup target add $rust_target
+
+   echo "🦀 building for \033[1m${ANDROID_BUILD_PROFILE}\033[0m..."
+   cargo build --target $rust_target ${RUST_PROFILE}
+
+    android_target=""
+    case $rust_target in
+     aarch64-linux-android) android_target="arm64-v8a"
+       ;;
+     armv7-linux-androideabi) android_target="armeabi-v7a"
+       ;;
+     i686-linux-android) android_target="x86"
+       ;;
+     x86_64-linux-android) android_target="x86_64"
+       ;;
+    esac
+
+    echo "ℹ️  The android target for \033[0;36m$rust_target\033[0m is \033[1;36m$android_target\033[0m"
+
+    echo "⚙️  creating \033[1;36m$android_target\033[0m directory in \033[1mjniLibs\033[0m..."
+    mkdir -p ../../android/app/src/main/jniLibs/$android_target
+
+    echo "⚙️  moving .so artifact to \033[1mjniLibs\033[0m directory..."
+    echo y | mv -i target/$rust_target/${ANDROID_BUILD_PROFILE}/libimage_processing.so ../../android/app/src/main/jniLibs/$android_target
+
+    echo "✅ finished build for \033[0;36m$rust_target\033[0m target"
+  done
+
+build-release:
+  just build "release"
+
+setup:
+  just -f ../justfile setup

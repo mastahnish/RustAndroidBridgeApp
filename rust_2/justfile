@@ -1,0 +1,20 @@
+#!/usr/bin/env just --justfile
+
+build:
+  just -f image_processing/justfile build
+  just -f simple_library/justfile build
+
+build-release:
+  just -f image_processing/justfile build-release
+  just -f simple_library/justfile build-release
+
+clean:
+  echo "🗑 cleaning slate..."
+  rm -rf target tmp
+
+  echo "🗑 removing jniLibs folder in Android module..."
+  rm -rf ../android/app/src/main/jniLibs
+
+setup:
+    echo "installing cbindgen..."
+    cargo install cbindgen
