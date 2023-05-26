@@ -11,7 +11,7 @@ use std::os::raw::c_void;
 use std::slice;
 
 #[no_mangle]
-pub extern "system" fn Java_com_example_MyActivity_grayscaleFilter(
+pub extern "system" fn Java_pl_myosolutions_rustandroidbridgeapp_MainActivity_grayscaleFilter(
     env: JNIEnv,
     _class: JClass,
     image_data: JByteBuffer,
